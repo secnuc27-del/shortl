@@ -15,18 +15,17 @@ const navItems = [
   { to: "/equipe", label: "Equipe" },
 ] as const;
 
-function Logo({ size = 44, white = false }: { size?: number; white?: boolean }) {
+function Logo({ className = "h-12 md:h-16", white = false }: { className?: string; white?: boolean }) {
   return (
     <div className="flex items-center gap-3">
       <img
         src={logoTransparente}
         alt="Logo Escola de Tempo Integral"
         style={{
-          height: size,
           width: "auto",
           filter: white ? "brightness(0) invert(1)" : undefined,
         }}
-        className="shrink-0 object-contain drop-shadow-sm"
+        className={`shrink-0 object-contain drop-shadow-sm ${className}`}
       />
     </div>
   );
@@ -51,7 +50,7 @@ export function SiteHeader() {
       <header className="relative z-50 border-b border-border bg-background">
         <div className="container-x grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-2 lg:grid-cols-[auto_1fr_auto]">
           <Link to="/" className="min-w-0">
-            <Logo size={70} />
+            <Logo className="h-10 sm:h-12 md:h-16" />
           </Link>
 
           <nav className="hidden items-center justify-center gap-0.5 lg:flex">
@@ -227,7 +226,7 @@ export function SiteFooter() {
           <div className="grid gap-10 md:grid-cols-[1fr_auto] md:items-end lg:grid-cols-[1.2fr_auto_auto]">
 
             <div className="max-w-xs">
-              <Logo size={140} white />
+              <Logo className="h-20 sm:h-24 md:h-32" white />
               <p className="mt-5 text-sm leading-relaxed text-white/60">
                 Há mais de {getSchoolAge()} anos formando jovens com ensino de
                 excelência, protagonismo e vivência escolar em tempo integral.
