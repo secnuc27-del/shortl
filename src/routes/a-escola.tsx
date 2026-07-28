@@ -4,7 +4,7 @@ import buildingImg from "@/assets/school-building.jpg";
 import logoOficial from "@/assets/logo-oficial.png";
 import logoTransparente from "@/assets/logo-transparente.png";
 import kairalaPhoto from "@/assets/kairala-jose-kairala.webp";
-import { Target, Eye, Heart } from "lucide-react";
+
 import { getSchoolAge } from "@/lib/school";
 
 export const Route = createFileRoute("/a-escola")({
@@ -39,23 +39,7 @@ const timeline = [
   },
 ];
 
-const pillars = [
-  {
-    icon: Target,
-    title: "Nossa missão",
-    text: "Formar cidadãos críticos, éticos, solidários e protagonistas de suas próprias histórias, preparados para os desafios da vida, da cidadania e das profissões do século XXI.",
-  },
-  {
-    icon: Eye,
-    title: "Nossa visão",
-    text: "Ser referência no Alto Acre e no Acre em Ensino Médio Integral, reconhecida pela excelência acadêmica, formação humana integral e pelo protagonismo juvenil de seus estudantes.",
-  },
-  {
-    icon: Heart,
-    title: "Nossos valores",
-    text: "Equidade, inclusão, gestão democrática, cultura de paz e protagonismo juvenil — princípios que guiam cada ação pedagógica e cada relação dentro da nossa comunidade escolar.",
-  },
-];
+
 
 function AEscola() {
   return (
