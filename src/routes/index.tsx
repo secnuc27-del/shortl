@@ -134,15 +134,15 @@ function HomePage() {
             </Link>
           </div>
 
-          <div className="mt-10 grid grid-cols-3 gap-2 max-w-xs sm:max-w-sm text-white/90 sm:gap-3">
+          <div className="mt-10 flex flex-wrap gap-2 sm:gap-3 text-white/90">
             {[
               { k: `${getSchoolAge()} anos`, v: "de história" },
               { k: "7h–15h", v: "Integral" },
               { k: "Brasiléia", v: "Alto Acre" },
             ].map((s) => (
               <div key={s.k} className="rounded-2xl border border-white/20 bg-white/5 p-3 sm:p-4 backdrop-blur">
-                <div className="text-lg font-black sm:text-2xl md:text-3xl">{s.k}</div>
-                <div className="text-[10px] text-white/75 sm:text-xs md:text-sm">{s.v}</div>
+                <div className="text-lg font-black sm:text-xl md:text-2xl whitespace-nowrap">{s.k}</div>
+                <div className="mt-0.5 text-[10px] text-white/75 sm:text-xs md:text-sm whitespace-nowrap">{s.v}</div>
               </div>
             ))}
           </div>
