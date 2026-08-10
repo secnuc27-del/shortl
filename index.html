@@ -17,15 +17,20 @@
       }(window.location))
     </script>
     <!-- Security Headers -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.google.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io https://api.emailjs.com;" />
-    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-    <meta http-equiv="X-Frame-Options" content="SAMEORIGIN" />
+    <!-- CSP funciona via <meta>. script-src usa o hash do script inline logo acima (SPA redirect do
+         GitHub Pages) em vez de 'unsafe-inline' — assim nenhum outro script injetado consegue rodar,
+         só esse. connect-src já libera formspree/emailjs pro fetch() do formulário de contato. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-nLAnh9qIyHANLV3Ff8BpGL65BkZhBwF1s4ktxQIy82Y='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; frame-src https://www.google.com; connect-src 'self' https://formspree.io https://api.emailjs.com; object-src 'none'; base-uri 'self'; form-action 'self' https://formspree.io https://api.emailjs.com;" />
     <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
-    <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()" />
+    <!-- X-Content-Type-Options, X-Frame-Options e Permissions-Policy foram REMOVIDOS daqui de
+         propósito: nenhum navegador aplica esses 3 headers quando estão em <meta> (só funcionam como
+         header HTTP de verdade). Mantê-los só dava falsa sensação de proteção. O GitHub Pages não
+         deixa configurar headers HTTP — pra ter esses 3 valendo de verdade, usar domínio próprio
+         com Cloudflare na frente (Response Header Transform Rule). -->
     <title>Escola Kairala José Kairala — Ensino Médio Integral</title>
     <meta name="description" content="Portal oficial da Escola Kairala José Kairala — Ensino Médio em Tempo Integral, do 1º ao 3º ano, das 7h às 15h." />
     <meta property="og:title" content="Escola Kairala José Kairala" />
-    <meta property="og:description" content="Ensino Médio em Tempo Integral. Conhecimento, projetos, clubes e tutorias." />
+    <meta property="og:description" content="Ensino Médio em TempoEncial. Conhecimento, projetos, clubes e tutorias." />
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
