@@ -42,24 +42,20 @@ interface Photo {
 function buildPhotos(): Photo[] {
   const result: Photo[] = [];
   const add = (
-    map: Record<string, string>,
+    map: Record<string, any>,
     cat: Exclude<Category, "Todos">,
     label: string
   ) => {
-    Object.values(map).forEach((url) => result.push({ url, cat, label }));
+    Object.values(map).forEach((val) => {
+      // Vite returns { default: "/path/to/img" } for eager imports of assets
+      const url = typeof val === "string" ? val : val.default;
+      if (url) result.push({ url, cat, label });
+    });
   };
-  add(ambienteImgs as Record<string, string>, "Ambiente", "Ambiente Escolar");
-  add(auditorioImgs as Record<string, string>, "Auditório", "Auditório");
-  add(
-    labInfoImgs as Record<string, string>,
-    "Lab. Informática",
-    "Laboratório de Informática"
-  );
-  add(
-    labQuimImgs as Record<string, string>,
-    "Lab. Química",
-    "Laboratório de Química"
-  );
+  add(ambienteImgs, "Ambiente", "Ambiente Escolar");
+  add(auditorioImgs, "Auditório", "Auditório");
+  add(labInfoImgs, "Lab. Informática", "Laboratório de Informática");
+  add(labQuimImgs, "Lab. Química", "Laboratório de Química");
   return result;
 }
 
