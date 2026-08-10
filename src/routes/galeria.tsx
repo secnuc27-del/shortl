@@ -220,7 +220,6 @@ function Lightbox({ photo, idx, total, onClose, onPrev, onNext }: LightboxProps)
 function Galeria() {
   const [filter, setFilter] = useState<Category>("Todos");
   const [lightboxIdx, setLightboxIdx] = useState<number | null>(null);
-  const [visibleCount, setVisibleCount] = useState(16);
 
   const list =
     filter === "Todos"
@@ -261,7 +260,6 @@ function Galeria() {
                 onClick={() => {
                   setFilter(f);
                   setLightboxIdx(null);
-                  setVisibleCount(16); // Reset on filter change
                 }}
                 className={`rounded-full px-4 py-2 text-sm font-semibold transition-all ${
                   filter === f
@@ -282,12 +280,12 @@ function Galeria() {
             </span>
           </div>
 
-          {/* Grid de fotos - Estilo Instagram (aspect-square) para melhor performance */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-            {list.slice(0, visibleCount).map((photo, idx) => (
+          {/* Grid masonry - fotos no tamanho natural */}
+          <div className="columns-2 sm:columns-3 md:columns-4 gap-3 [column-gap:12px]">
+            {list.map((photo, idx) => (
               <div
                 key={photo.url}
-                className="group relative overflow-hidden rounded-2xl cursor-pointer ring-1 ring-border hover:ring-2 hover:ring-primary transition-all duration-300 hover:-translate-y-1 aspect-square"
+                className="mb-3 break-inside-avoid group relative overflow-hidden rounded-2xl cursor-pointer ring-1 ring-border hover:ring-2 hover:ring-primary transition-all duration-300 hover:-translate-y-1"
                 onClick={() => open(idx)}
               >
                 <img
@@ -295,7 +293,7 @@ function Galeria() {
                   alt={photo.label}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 block bg-muted/50"
+                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 block bg-muted/30"
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/35 transition-colors duration-300 flex items-center justify-center">
@@ -310,17 +308,6 @@ function Galeria() {
               </div>
             ))}
           </div>
-
-          {visibleCount < list.length && (
-            <div className="mt-10 flex justify-center">
-              <button 
-                onClick={() => setVisibleCount(c => c + 16)}
-                className="btn-accent px-8 py-3"
-              >
-                Carregar mais fotos
-              </button>
-            </div>
-          )}
 
           {list.length === 0 && (
             <div className="text-center py-20 text-muted-foreground">
