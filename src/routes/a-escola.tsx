@@ -4,8 +4,85 @@ import buildingImg from "@/assets/school-building.jpg";
 import logoOficial from "@/assets/logo-oficial.png";
 import logoTransparente from "@/assets/logo-transparente.png";
 import kairalaPhoto from "@/assets/kairala-jose-kairala.webp";
-
 import { getSchoolAge } from "@/lib/school";
+import { useState, useEffect, useCallback } from "react";
+import { createPortal } from "react-dom";
+import { X, ZoomIn, ZoomOut } from "lucide-react";
+
+/* ── Lightbox com zoom para logos ───────────────────────── */
+function LogoLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  const [phase, setPhase] = useState<"in" | "open" | "out">("in");
+  const [zoomed, setZoomed] = useState(false);
+
+  useEffect(() => {
+    const t = requestAnimationFrame(() => requestAnimationFrame(() => setPhase("open")));
+    return () => cancelAnimationFrame(t);
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setPhase("out");
+    setTimeout(onClose, 260);
+  }, [onClose]);
+
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") handleClose(); };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, [handleClose]);
+
+  const isOpen = phase === "open";
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black/85 p-6"
+      style={{ opacity: isOpen ? 1 : 0, transition: "opacity 0.26s ease" }}
+      onClick={handleClose}
+    >
+      {/* Botão fechar */}
+      <button
+        onClick={handleClose}
+        aria-label="Fechar"
+        className="absolute right-4 top-4 grid h-10 w-10 place-items-center rounded-full bg-white/15 hover:bg-white/30 text-white transition-colors"
+      >
+        <X size={20} />
+      </button>
+
+      {/* Hint zoom */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-sm px-4 py-1.5 text-xs text-white/70">
+        {zoomed ? <ZoomOut size={14} /> : <ZoomIn size={14} />}
+        {zoomed ? "Clique para reduzir" : "Clique na logo para ampliar"}
+      </div>
+
+      {/* Imagem */}
+      <div
+        className="relative flex items-center justify-center"
+        style={{
+          transform: isOpen ? "scale(1) translateY(0)" : "scale(0.88) translateY(16px)",
+          opacity: isOpen ? 1 : 0,
+          transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.26s ease",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={src}
+          alt={alt}
+          className="object-contain drop-shadow-2xl"
+          style={{
+            maxHeight: "80vh",
+            maxWidth: "90vw",
+            transform: zoomed ? "scale(2)" : "scale(1)",
+            cursor: zoomed ? "zoom-out" : "zoom-in",
+            transition: "transform 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+            transformOrigin: "center center",
+          }}
+          onClick={() => setZoomed((z) => !z)}
+        />
+      </div>
+    </div>,
+    document.body
+  );
+}
+
 
 export const Route = createFileRoute("/a-escola")({
   component: AEscola,
@@ -42,6 +119,8 @@ const timeline = [
 
 
 function AEscola() {
+  const [openLogo, setOpenLogo] = useState<{ src: string; alt: string } | null>(null);
+
   return (
     <Page>
       <PageHero
@@ -172,17 +251,29 @@ function AEscola() {
         <div className="container-x">
           <div className="mx-auto max-w-4xl text-center">
             <div className="flex flex-col sm:flex-row items-center justify-center gap-8 md:gap-16 mb-12">
-              <img
-                src={logoOficial}
-                alt="Brasão Oficial da Escola"
-                className="h-36 md:h-48 w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500"
-              />
+              <button
+                onClick={() => setOpenLogo({ src: logoOficial, alt: "Brasão Oficial da Escola" })}
+                className="group cursor-zoom-in focus:outline-none"
+                aria-label="Ver brasão em tela cheia"
+              >
+                <img
+                  src={logoOficial}
+                  alt="Brasão Oficial da Escola"
+                  className="h-36 md:h-48 w-auto object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-500"
+                />
+              </button>
               <div className="w-16 h-px sm:w-px sm:h-28 bg-border/80" />
-              <img
-                src={logoTransparente}
-                alt="Logo Escola de Tempo Integral"
-                className="h-36 md:h-48 w-auto object-contain drop-shadow-xl hover:scale-105 transition-transform duration-500"
-              />
+              <button
+                onClick={() => setOpenLogo({ src: logoTransparente, alt: "Logo Escola de Tempo Integral" })}
+                className="group cursor-zoom-in focus:outline-none"
+                aria-label="Ver logo em tela cheia"
+              >
+                <img
+                  src={logoTransparente}
+                  alt="Logo Escola de Tempo Integral"
+                  className="h-36 md:h-48 w-auto object-contain drop-shadow-xl group-hover:scale-105 transition-transform duration-500"
+                />
+              </button>
             </div>
             <div className="text-sm font-bold uppercase tracking-wider text-accent">Nosso compromisso</div>
             <h2 className="mt-2 text-3xl font-black md:text-4xl">Tradição que abraça o futuro.</h2>
@@ -203,6 +294,13 @@ function AEscola() {
           </div>
         </div>
       </section>
+      {openLogo && (
+        <LogoLightbox
+          src={openLogo.src}
+          alt={openLogo.alt}
+          onClose={() => setOpenLogo(null)}
+        />
+      )}
     </Page>
   );
 }

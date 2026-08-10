@@ -250,7 +250,7 @@ function Contato() {
                 <button
                   type="button"
                   onClick={() => setMapView(mapView === "street" ? "map" : "street")}
-                  className="absolute top-4 right-4 z-10 flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-bold text-primary shadow-lg hover:bg-white hover:scale-105 transition-all"
+                  className="absolute bottom-4 right-4 z-10 flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-bold text-primary shadow-lg hover:bg-white hover:scale-105 transition-all"
                 >
                   {mapView === "street" ? (
                     <><Map size={18} /> Ver no Mapa</>

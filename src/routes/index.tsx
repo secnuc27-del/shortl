@@ -63,7 +63,7 @@ function ClubSlideshow() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[var(--shadow-card)]">
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-black">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-black">
         {clubImgs.map((img, i) => (
           <img
             key={i}
@@ -164,18 +164,20 @@ function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:grid sm:gap-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             {highlights.map((h, i) => (
               <div
                 key={h.title}
-                className="card-soft group p-6"
+                className="card-soft group p-4 sm:p-6 flex flex-row items-center gap-4 sm:flex-col sm:items-start sm:gap-0"
                 style={{ animation: `fade-up 0.5s ease-out ${i * 0.08}s both` }}
               >
-                <div className="grid h-12 w-12 place-items-center rounded-2xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
-                  <h.icon size={22} />
+                <div className="shrink-0 grid h-10 w-10 sm:h-12 sm:w-12 place-items-center rounded-xl sm:rounded-2xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+                  <h.icon className="h-5 w-5 sm:h-[22px] sm:w-[22px]" />
                 </div>
-                <h3 className="mt-4 text-lg font-bold">{h.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{h.text}</p>
+                <div className="flex-1">
+                  <h3 className="text-[15px] sm:mt-4 sm:text-lg font-bold leading-tight">{h.title}</h3>
+                  <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-muted-foreground">{h.text}</p>
+                </div>
               </div>
             ))}
           </div>

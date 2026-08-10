@@ -1,7 +1,9 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import { useState, useEffect, useCallback, type ReactNode } from "react";
+import { useState, useEffect, useCallback, useRef, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { Menu, X, MapPin, Instagram, Facebook, Clock, PartyPopper } from "lucide-react";
 import logoTransparente from "../assets/logo-transparente.png";
+import animVideo from "../assets/logo_anim.mp4";
 import { isSchoolAnniversary, getSchoolAge } from "@/lib/school";
 
 const navItems = [
@@ -16,18 +18,85 @@ const navItems = [
 ] as const;
 
 function Logo({ className = "h-12 md:h-16", white = false }: { className?: string; white?: boolean }) {
+  const [animState, setAnimState] = useState<"idle" | "start" | "center" | "returning">("idle");
+  const logoRef = useRef<HTMLImageElement>(null);
+  const [startRect, setStartRect] = useState<DOMRect | null>(null);
+  const [windowSize, setWindowSize] = useState({ w: 0, h: 0 });
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleClick = (e: React.MouseEvent) => {
+    // Intercept click to play animation, let Link navigate to home as usual
+    if (animState !== "idle") return;
+    if (logoRef.current) {
+      setStartRect(logoRef.current.getBoundingClientRect());
+      setWindowSize({ w: window.innerWidth, h: window.innerHeight });
+      setAnimState("start");
+    }
+  };
+
+  useEffect(() => {
+    if (animState === "start") {
+      const t = setTimeout(() => {
+        setAnimState("center");
+        if (videoRef.current) {
+          videoRef.current.currentTime = 0;
+          videoRef.current.play();
+        }
+      }, 50); // slight delay to allow 'start' DOM update to render first
+      return () => clearTimeout(t);
+    }
+  }, [animState]);
+
+  const handleVideoEnd = () => {
+    setAnimState("returning");
+    setTimeout(() => {
+      setAnimState("idle");
+    }, 800); // Wait for return animation to finish
+  };
+
+  const actualWidth = windowSize.w ? Math.min(700, windowSize.w * 0.9) : 700;
+  const scaleAtStart = startRect ? startRect.width / actualWidth : 0.2;
+
   return (
-    <div className="flex items-center gap-3">
-      <img
-        src={logoTransparente}
-        alt="Logo Escola de Tempo Integral"
-        style={{
-          width: "auto",
-          filter: white ? "brightness(0) invert(1)" : undefined,
-        }}
-        className={`shrink-0 object-contain drop-shadow-sm ${className}`}
-      />
-    </div>
+    <>
+      <div className="flex items-center gap-3" onClick={handleClick}>
+        <img
+          ref={logoRef}
+          src={logoTransparente}
+          alt="Logo Escola de Tempo Integral"
+          style={{
+            width: "auto",
+            filter: white ? "brightness(0) invert(1)" : undefined,
+            opacity: animState === "idle" ? 1 : 0.1,
+          }}
+          className={`shrink-0 object-contain drop-shadow-sm transition-opacity duration-500 ${className}`}
+        />
+      </div>
+
+      {animState !== "idle" && startRect && createPortal(
+        <div className="fixed inset-0 z-[9999] pointer-events-none flex items-center justify-center overflow-hidden">
+          <video
+            ref={videoRef}
+            src={animVideo}
+            onEnded={handleVideoEnd}
+            muted
+            playsInline
+            className="absolute object-contain drop-shadow-2xl"
+            style={{
+              width: actualWidth,
+              height: "auto",
+              top: animState === "center" ? windowSize.h / 2 : startRect.top + startRect.height / 2,
+              left: animState === "center" ? windowSize.w / 2 : startRect.left + startRect.width / 2,
+              transform: `translate(-50%, -50%) scale(${animState === "center" ? 1 : scaleAtStart}) rotate(${animState === "center" ? "0deg" : "-10deg"})`,
+              transition: "all 0.8s cubic-bezier(0.34,1.56,0.64,1)",
+              mixBlendMode: "multiply",
+              opacity: animState === "idle" ? 0 : 1, // Fix: keeps it fully visible while returning
+            }}
+          />
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
@@ -226,7 +295,7 @@ export function SiteFooter() {
           <div className="grid gap-10 md:grid-cols-[1fr_auto] md:items-end lg:grid-cols-[1.2fr_auto_auto]">
 
             <div className="max-w-xs">
-              <Logo className="h-20 sm:h-24 md:h-32" white />
+              <Logo className="h-16 sm:h-24 md:h-32" white />
               <p className="mt-5 text-sm leading-relaxed text-white/60">
                 Há mais de {getSchoolAge()} anos formando jovens com ensino de
                 excelência, protagonismo e vivência escolar em tempo integral.

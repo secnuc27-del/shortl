@@ -103,7 +103,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  useSecurityObfuscation();
+  // Temporariamente desativado para você conseguir usar o F12 e testar!
+  // useSecurityObfuscation();
 
   return (
     <QueryClientProvider client={queryClient}>

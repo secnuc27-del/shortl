@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Page, PageHero } from "@/components/Layout";
-import tutoringImg from "@/assets/tutoring.jpg";
+import tutoringImg from "@/assets/tutoria-nova.jpg";
 import { Compass, Ear, Target, TrendingUp, HandHeart } from "lucide-react";
 
 export const Route = createFileRoute("/tutorias")({
