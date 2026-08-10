@@ -282,12 +282,12 @@ function Galeria() {
             </span>
           </div>
 
-          {/* Grid masonry */}
-          <div className="columns-2 sm:columns-3 md:columns-4 gap-3 [column-gap:12px]">
+          {/* Grid de fotos - Estilo Instagram (aspect-square) para melhor performance */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
             {list.slice(0, visibleCount).map((photo, idx) => (
               <div
                 key={photo.url}
-                className="mb-3 break-inside-avoid group relative overflow-hidden rounded-2xl cursor-pointer ring-1 ring-border hover:ring-2 hover:ring-primary transition-all duration-300 hover:-translate-y-1"
+                className="group relative overflow-hidden rounded-2xl cursor-pointer ring-1 ring-border hover:ring-2 hover:ring-primary transition-all duration-300 hover:-translate-y-1 aspect-square"
                 onClick={() => open(idx)}
               >
                 <img
@@ -295,7 +295,7 @@ function Galeria() {
                   alt={photo.label}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-105 block bg-muted/50"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 block bg-muted/50"
                 />
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/35 transition-colors duration-300 flex items-center justify-center">

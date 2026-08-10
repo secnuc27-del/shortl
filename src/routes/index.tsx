@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import schoolBuilding from "@/assets/school-building.jpg";
 import eventsImg from "@/assets/events.jpg";
-import tutoringImg from "@/assets/tutoring.jpg";
+import tutoringImg from "@/assets/tutoria-nova.jpg";
 import imgLigaOlimpica from "@/assets/clubes/Liga Olimpica.jpeg";
 import imgArenaIdeias from "@/assets/clubes/arena ideias.jpeg";
 import imgArtDraw from "@/assets/clubes/artes.jpeg";
